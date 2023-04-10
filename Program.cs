@@ -31,7 +31,7 @@ do
 
 
         case "3":
-
+                BuscarPersona();
 
             break;
 
@@ -179,7 +179,6 @@ string IngresarEmail()
         int cantArroba = 0;
         if (noValido) Console.WriteLine("El valor ingresado es incorrecto.\nVuelva a intentarlo: ");
         noValido = false;
-        Console.Write("Escriba el email de la persona: ");
         email = Console.ReadLine();
 
         if (email.Any(caracter => caracter == '@')) cantArroba++;
@@ -195,7 +194,7 @@ string IngresarEmail()
 
 #endregion
 
-
+#region 2
 void ObtenerEstadisticasDelCenso(List<Persona> _lP){
 int cantPersonas=_lP.Count;
 
@@ -228,6 +227,64 @@ Console.WriteLine($"Estadísticas del Censo:\nCantidad de Personas: {cantPersona
 
 
 }
+#endregion
+
+#region 3
+void BuscarPersona(){
+
+int resp;
+bool encontrado=false;
+
+if(listaPersonas.Count == 0){
+    Console.WriteLine("\n--Todavia no ha ingresado ninguna persona\n");
+    return;
+}
+    
+Console.Write("Escribe el DNI de la persona que desea encontrar: ");
+
+resp = int.Parse(Console.ReadLine());
+
+foreach(Persona p in listaPersonas){
+
+if(resp == p.DNI){
+
+Console.WriteLine($"El nombre de la persona es {p.Nombre}\nEl apellido de la persona es {p.Apellido}\nLa fecha de nacimiento de la persona es {p.FechaNacimiento}\nLa edad de la persona es {p.ObtenerEdad()}");
+string puedeVotar = "";
+
+if(!p.PuedeVotar()) puedeVotar = "no ";
+
+Console.WriteLine($"La persona {puedeVotar}puede votar\nEl Email de la persona es {p.Email}");
+    
+encontrado = true;
+}
+}
+
+
+while(!encontrado){
+
+Console.WriteLine("No hay ninguna persona con ese DNI en el registro");
+Console.Write("Escribe el DNI de la persona que desea encontrar: ");
+
+resp = int.Parse(Console.ReadLine());
+
+foreach(Persona p in listaPersonas){
+
+if(resp == p.DNI){
+
+Console.WriteLine($"El nombre de la persona es {p.Nombre}\nEl apellido de la persona es {p.Apellido}\nLa fecha de nacimiento de la persona es {p.FechaNacimiento}\nLa edad de la persona es {p.ObtenerEdad()}");
+string puedeVotar = "";
+
+if(!p.PuedeVotar()) puedeVotar = "no ";
+
+Console.WriteLine($"La persona {puedeVotar}puede votar\nEl Email de la persona es {p.Email}");
+    
+encontrado = true;
+}
+}
+
+}
+}
+#endregion
 
              ;
                 ;

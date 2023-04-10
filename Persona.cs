@@ -13,14 +13,14 @@ FechaNacimiento = _fnac;
 Email = _email;
 
 }
-public int DNI{get;set;}
+public int DNI{get;private set;}
 
-string Apellido{get;set;}
-string  Nombre{get;set;}
+public string Apellido{get;private set;}
+public string  Nombre{get;private set;}
 
-string Email{get;set;}
+public string Email{get;private set;}
 
-DateTime FechaNacimiento{get;set;}
+public DateTime FechaNacimiento{get;private set;}
 
 
 public bool PuedeVotar(){
