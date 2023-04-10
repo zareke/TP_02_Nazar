@@ -1,4 +1,5 @@
-﻿List<Persona> listaPersonas = new List<Persona>();
+﻿#region Menu
+List<Persona> listaPersonas = new List<Persona>();
 string resp;
 do
 {
@@ -31,18 +32,18 @@ do
 
 
         case "3":
-                BuscarPersona();
+            BuscarPersona();
 
             break;
 
         case "4":
-
+            ModificarMailDeUnaPersona();
 
             break;
     }
 } while (resp != "5");
 
-
+#endregion
 
 #region 1
 void CargarNuevaPersona()
@@ -158,7 +159,7 @@ DateTime IngresarFechaDeNacimiento()
         respInicial = Console.ReadLine();
 
 
-        noValido = !DateTime.TryParse(respInicial, out fnac) || fnac.Year > DateTime.Today.Year;
+        noValido = !DateTime.TryParse(respInicial, out fnac) || fnac.Year > DateTime.Today.Year-1;
 
     } while (noValido);
 
@@ -195,95 +196,114 @@ string IngresarEmail()
 #endregion
 
 #region 2
-void ObtenerEstadisticasDelCenso(List<Persona> _lP){
-int cantPersonas=_lP.Count;
+void ObtenerEstadisticasDelCenso(List<Persona> _lP)
+{
+    int cantPersonas = _lP.Count;
 
-if(cantPersonas == 0){
-
-
-Console.WriteLine("\nAún no se ingresaron personas en la lista\n");
-
-}else{
-  
-
-int cantPersonasVotar=0;
-double promedioEdad, totalEdad=0;  
-
-for(int i = 0; i<_lP.Count;i++){
+    if (cantPersonas == 0)
+    {
 
 
-if(_lP[i].PuedeVotar())  cantPersonasVotar++;
+        Console.WriteLine("\nAún no se ingresaron personas en la lista\n");
 
-totalEdad += _lP[i].ObtenerEdad();
-
-}
-promedioEdad = totalEdad/cantPersonas;
-
+    }
+    else
+    {
 
 
-Console.WriteLine($"Estadísticas del Censo:\nCantidad de Personas: {cantPersonas}\nCantidad de Personas habilitadas para votar: {cantPersonasVotar}\nPromedio de Edad: {promedioEdad}");
+        int cantPersonasVotar = 0;
+        double promedioEdad, totalEdad = 0;
 
-}
+        for (int i = 0; i < _lP.Count; i++)
+        {
+
+
+            if (_lP[i].PuedeVotar()) cantPersonasVotar++;
+
+            totalEdad += _lP[i].ObtenerEdad();
+
+        }
+        promedioEdad = totalEdad / cantPersonas;
+
+
+
+        Console.WriteLine($"Estadísticas del Censo:\nCantidad de Personas: {cantPersonas}\nCantidad de Personas habilitadas para votar: {cantPersonasVotar}\nPromedio de Edad: {promedioEdad}");
+
+    }
 
 
 }
 #endregion
 
 #region 3
-void BuscarPersona(){
+void BuscarPersona()
+{
+    Persona p = BuscarDni();
+    if (p != null)
+    {
+        Console.WriteLine($"El nombre de la persona es {p.Nombre}\nEl apellido de la persona es {p.Apellido}\nLa fecha de nacimiento de la persona es {p.FechaNacimiento}\nLa edad de la persona es {p.ObtenerEdad()}");
+        string puedeVotar = "";
 
-int resp;
-bool encontrado=false;
+        if (!p.PuedeVotar()) puedeVotar = "no ";
 
-if(listaPersonas.Count == 0){
-    Console.WriteLine("\n--Todavia no ha ingresado ninguna persona\n");
-    return;
-}
-    
-Console.Write("Escribe el DNI de la persona que desea encontrar: ");
-
-resp = int.Parse(Console.ReadLine());
-
-foreach(Persona p in listaPersonas){
-
-if(resp == p.DNI){
-
-Console.WriteLine($"El nombre de la persona es {p.Nombre}\nEl apellido de la persona es {p.Apellido}\nLa fecha de nacimiento de la persona es {p.FechaNacimiento}\nLa edad de la persona es {p.ObtenerEdad()}");
-string puedeVotar = "";
-
-if(!p.PuedeVotar()) puedeVotar = "no ";
-
-Console.WriteLine($"La persona {puedeVotar}puede votar\nEl Email de la persona es {p.Email}");
-    
-encontrado = true;
-}
-}
-
-
-while(!encontrado){
-
-Console.WriteLine("No hay ninguna persona con ese DNI en el registro");
-Console.Write("Escribe el DNI de la persona que desea encontrar: ");
-
-resp = int.Parse(Console.ReadLine());
-
-foreach(Persona p in listaPersonas){
-
-if(resp == p.DNI){
-
-Console.WriteLine($"El nombre de la persona es {p.Nombre}\nEl apellido de la persona es {p.Apellido}\nLa fecha de nacimiento de la persona es {p.FechaNacimiento}\nLa edad de la persona es {p.ObtenerEdad()}");
-string puedeVotar = "";
-
-if(!p.PuedeVotar()) puedeVotar = "no ";
-
-Console.WriteLine($"La persona {puedeVotar}puede votar\nEl Email de la persona es {p.Email}");
-    
-encontrado = true;
-}
-}
+        Console.WriteLine($"La persona {puedeVotar}puede votar\nEl Email de la persona es {p.Email}");
+    }
 
 }
+
+
+Persona BuscarDni()
+{
+    int rep = 0;
+    int resp;
+    if (listaPersonas.Count == 0)
+    {
+        Console.WriteLine("\n--Todavia no ha ingresado ninguna persona\n");
+        return null;
+    }
+
+
+    while (true)
+    {
+
+        if (rep > 0) Console.WriteLine("No hay ninguna persona con ese DNI en el registro");
+        rep++;
+
+        Console.Write("Escribe el DNI de la persona que desea encontrar: ");
+
+        resp = int.Parse(Console.ReadLine());
+
+        foreach (Persona p in listaPersonas)
+        {
+
+            if (resp == p.DNI)
+            {
+
+                return p;
+            }
+        }
+
+    }
+
 }
+#endregion
+
+#region 4
+
+void ModificarMailDeUnaPersona()
+{
+
+    Persona p = BuscarDni();
+    if (p != null)
+    {
+
+        Console.Write("Escriba el nuevo Email de la persona: ");
+        p.Email = IngresarEmail();
+
+    }
+
+}
+
 #endregion
 
              ;
